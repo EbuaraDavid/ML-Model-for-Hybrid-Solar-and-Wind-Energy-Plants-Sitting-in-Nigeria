@@ -1,39 +1,74 @@
-1. **hybrid_model copy.ipynb**
+**RFM.ipynb:**
+Contains the implementation of the baseline Random Forest model using a random train–test split.
 
-This Jupyter Notebook contains the main modelling workflow, including:
+**RFModi.ipynb:**
+Implements the spatially validated Random Forest model using regional train–test splitting. This represents the recommended model in this study.
 
-Manual weighting of the technical, environmental, and infrastructural criteria
+**DecisionTree.ipynb:**
+Contains the implementation of the Decision Tree classifier used for comparative analysis.
 
-Development of the multi-criteria decision model
+**LogisticRegression.ipynb:**
+Implements the Logistic Regression model used as a baseline to evaluate linear model performance.
 
-Training and evaluation of the Random Forest classifier
+**PREDD.ipynb:**
+Demonstration notebook showing how the trained model is applied to new datasets to generate suitability predictions and maps.
 
-Generation of suitability scores and final class labels
+**suitability_model_spatial.pkl:**
+Trained Random Forest model (spatially validated). This is the primary model for deployment and prediction.
 
-It serves as the core notebook for the hybrid suitability modelling process.
+**decision_tree_model_spatial.pkl:**
+Trained Decision Tree model for comparative prediction.
 
+**gee_hybrid_power_Data.js:**
+Google Earth Engine (GEE) script used for dataset preprocessing, overlay analysis, and sample point extraction.
 
-**2. PREDD.ipynb**
-
-This notebook focuses on model deployment and prediction. It includes:
-
-Loading and applying the saved Random Forest model
-
-Running predictions on preprocessed raster layers
-
-Generating suitability outputs using the trained classifier
-
-It is primarily used for inference once the model has been trained.
+**README.md:**
+Documentation describing the project structure and usage instructions
 
 
-**3. gee_hybrid_power_Data.js**
 
-This is the Google Earth Engine (GEE) script used for the geospatial data preparation stage. It contains:
+**How to Use the Model**
 
-Overlay and harmonisation of all input datasets
+The trained model can be applied to new datasets in both tabular and raster formats. The workflow as demonstrated in PREDD.ipynb provides a complete example of how to generate predictions.
 
-Random point generation for training sample extraction
+**Option 1:** Using Tabular Data (CSV)
+**Prepare a dataset containing the required input variables:**
+GHI
+Wind
+Elevation
+LULC
+Distance to road
+Distance to railway
+Distance to transmission lines
 
-Visualization of all layers to confirm alignment and preprocessing quality
+**Ensure that:**
+Variable names match those used during training
+Units and preprocessing are consistent (30m Resolution)
 
-It represents the full GEE workflow for generating training data and preparing the composite image used in the ML pipeline.
+**Load the model and make predictions:**
+import joblib
+model = joblib.load("suitability_model_spatial.pkl")
+predictions = model.predict(X)
+
+**Option 2: Generating Suitability Maps (Raster-Based Prediction)**
+
+For geospatial applications, the model can be applied to a multiband raster dataset, where each band represents one predictor variable.
+
+Requirements:
+Input raster must contain 7 bands in the following order:
+GHI
+Distance to railway
+Distance to road
+Distance to transmission lines
+Elevation
+LULC
+Wind
+
+**Workflow:**
+Load the trained model
+Read the multiband raster
+Process the raster in chunks (for memory efficiency, if your system is not efficient)
+Predict suitability for each pixel
+Export the result as a GeoTIFF
+
+This process is fully implemented in PREDD.ipynb, which demonstrates how to generate the suitability maps used in this study.

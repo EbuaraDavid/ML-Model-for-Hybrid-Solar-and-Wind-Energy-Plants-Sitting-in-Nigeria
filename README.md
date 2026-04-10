@@ -19,6 +19,9 @@ Trained Random Forest model (spatially validated). This is the primary model for
 **decision_tree_model_spatial.pkl:**
 Trained Decision Tree model for comparative prediction.
 
+**suitability_model(Random).zip**
+Trained Random Forest model (Randomly split).
+
 **gee_hybrid_power_Data.js:**
 Google Earth Engine (GEE) script used for dataset preprocessing, overlay analysis, and sample point extraction.
 
